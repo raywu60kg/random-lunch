@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 global DREW = False
 global result
-DROW_TIME = os.environ['DROW_TIME']
+DROW_TIME = os.environ['DROW_TIME'] or 'today'
 if DROW_TIME == 'today':
     DROW_TIME = strftime('%Y-%m-%d %H:%M:%S', datetime.datetime.now())
 else:
@@ -97,6 +97,6 @@ def drow_lunch():
 if __name__ == '__main__':
 
     app.run(host='127.0.0.1', debug=True)
-    sched.add_job(drow_lunch, 'date', run_date=datetime.strptime(DROW_TIME, '%Y-%M'))
+    sched.add_job(drow_lunch, 'date', run_date=DROW_TIME)
     while True:
         sched.start()

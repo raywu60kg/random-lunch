@@ -1,8 +1,8 @@
 TAG="random-lunch:dev"
-# DROW_TIME="1992-04-18T12:00"
+# DROW_TIME="1992-04-18 12:00:00"
 DROW_TIME="today"
 activate ::
-	gunicorn -w 4 --log-config .config/logging.conf -c .config/gunicorn_config.py src/app.py
+	gunicorn -w 4 --log-config .config/logging.conf -c .config/gunicorn_config.py src.app:app
 build-dev ::
 	docker build -t=${TAG} ./
 run-dev ::
