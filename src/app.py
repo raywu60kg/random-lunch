@@ -24,9 +24,10 @@ else:
 @app.route('/time_info', methods=['GET'])
 def get_time_info():
     if DREW is True:
-        return 'Already drew {}'.format(result)
+        return 'Already drew {}\n'.format(result)
     
-    return 'Gonna drow the meal at {}\n'.format(DROW_TIME)
+    return 'Gonna drow the meal at {}\nCurrent time: {}'.format(
+        DROW_TIME, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 
 @app.route('/lunch_candidate', methods=['GET', 'POST'])
@@ -69,9 +70,9 @@ def lunch_candidate():
 @app.route('/result', methods=['GET'])
 def get_drow_result():
     if DREW is True:
-        return 'Result {}'.format(result)
+        return 'Result {}\n'.format(result)
     else:
-        return 'Have not drow'
+        return 'Have not drow\n'
 
 @app.route('/health', methods=['GET'])
 def health_check():
@@ -84,6 +85,24 @@ def health_check():
     return 'OK\n'
 
 def drow_lunch():
+    if DREW is True:
+        return 'Already drew {}\n'.format(result)
+    DREW = True
+    with open('src/lunch_candidate.json', 'r') as file:
+        lunch_candidate = json.load(file)
+    name = lunch_candidate['name']
+    proposal = lunch_candidate['proposal']
+
+    index = random.choice(list(enumerate(proposal)))[0]
+
+    result = {
+        'name': name[index],
+        'proposal': proposal[index]
+    }
+    return 'Drew result: {}\n'.format(result)
+
+@app.route('/drow', methods=['POST'])
+def force_drow():
     DREW = True
     with open('src/lunch_candidate.json', 'r') as file:
         lunch_candidate = json.load(file)
