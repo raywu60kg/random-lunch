@@ -20,7 +20,7 @@ else:
 @app.route('/time_info', methods=['GET'])
 def get_time_info():
     if 'result.json' in os.listdir('src'):
-        with open('src/result.json') as file:
+        with open('src/result.json', 'r') as file:
             result = json.load(file)
         return 'Already drew {}\n'.format(result)
     
@@ -41,7 +41,7 @@ def lunch_candidate():
 
     elif request.method == 'POST':
         if 'result.json' in os.listdir('src'):
-            with open('src/result.json') as file:
+            with open('src/result.json', 'r') as file:
                 result = json.load(file)
             return 'Already drew {}\n'.format(result)
 
@@ -70,7 +70,7 @@ def lunch_candidate():
 @app.route('/result', methods=['GET'])
 def get_drow_result():
     if 'result.json' in os.listdir('src'):
-        with open('src/result.json') as file:
+        with open('src/result.json', 'r') as file:
             result = json.load(file)
         return 'Already drew {}\n'.format(result)
     else:
@@ -88,7 +88,7 @@ def health_check():
 
 def drow_lunch():
     if 'result.json' in os.listdir('src'):
-        with open('src/result.json') as file:
+        with open('src/result.json', 'r') as file:
             result = json.load(file)
         return 'Already drew {}\n'.format(result)
 
@@ -111,7 +111,7 @@ def drow_lunch():
 @app.route('/drow', methods=['POST'])
 def force_drow():
     if 'result.json' in os.listdir('src'):
-        with open('src/result.json') as file:
+        with open('src/result.json', 'r') as file:
             result = json.load(file)
         return 'Already drew {}\n'.format(result)
         
