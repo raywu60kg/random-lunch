@@ -11,11 +11,11 @@ package_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
-DROW_TIME = os.environ.get('DROW_TIME') or 'today'
-if DROW_TIME == 'today':
-    DROW_TIME = datetime.datetime.now().strftime('%Y-%m-%d') + ' 12:00:00'
+DRAW_TIME = os.environ.get('DRAW_TIME') or 'today'
+if DRAW_TIME == 'today':
+    DRAW_TIME = datetime.datetime.now().strftime('%Y-%m-%d') + ' 12:00:00'
 else:
-    DROW_TIME = DROW_TIME
+    DRAW_TIME = DRAW_TIME
 
 @app.route('/time_info', methods=['GET'])
 def get_time_info():
@@ -25,7 +25,7 @@ def get_time_info():
         return 'Already drew {}\n'.format(result)
     
     return 'Gonna drow the meal at {}\nCurrent time: {}\n'.format(
-        DROW_TIME, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+        DRAW_TIME, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 
 @app.route('/lunch_candidate', methods=['GET', 'POST'])
@@ -68,7 +68,7 @@ def lunch_candidate():
             return 'Post failed: {0}'.format(ex)
 
 @app.route('/result', methods=['GET'])
-def get_drow_result():
+def get_draw_result():
     if 'result.json' in os.listdir('src'):
         with open('src/result.json', 'r') as file:
             result = json.load(file)
@@ -86,7 +86,7 @@ def health_check():
     logging.info('health check')
     return 'OK\n'
 
-def drow_lunch():
+def draw_lunch():
     if 'result.json' in os.listdir('src'):
         with open('src/result.json', 'r') as file:
             result = json.load(file)
@@ -108,8 +108,8 @@ def drow_lunch():
             json.dump(result, file)
         return 'Drew result: {}\n'.format(result)
 
-@app.route('/drow', methods=['POST'])
-def force_drow():
+@app.route('/draw', methods=['POST'])
+def force_draw():
     if 'result.json' in os.listdir('src'):
         with open('src/result.json', 'r') as file:
             result = json.load(file)
@@ -135,6 +135,6 @@ def force_drow():
 if __name__ == '__main__':
 
     app.run(host='127.0.0.1', debug=True)
-    sched.add_job(drow_lunch, 'date', run_date=DROW_TIME)
+    sched.add_job(draw_lunch, 'date', run_date=DRAW_TIME)
     while True:
         sched.start()
