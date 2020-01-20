@@ -11,11 +11,13 @@ package_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
-global DREW = False
+global DREW 
+DREW = False
 global result
-DROW_TIME = os.environ['DROW_TIME'] or 'today'
+result = {}
+DROW_TIME = os.environ.get('DROW_TIME') or 'today'
 if DROW_TIME == 'today':
-    DROW_TIME = strftime('%Y-%m-%d %H:%M:%S', datetime.datetime.now())
+    DROW_TIME = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 else:
     DROW_TIME = DROW_TIME
 
@@ -40,7 +42,7 @@ def lunch_candidate():
 
     elif request.method == 'POST':
         if DREW is True:
-            return 'Already drew {}'.format(meal)
+            return 'Already drew {}'.format(result)
 
         data = request.get_json(force=True)
         logging.info('@@@ {}'.format(data))
@@ -79,9 +81,9 @@ def health_check():
     return 'OK\n'
 
 def drow_lunch():
-    DREW = 1
+    DREW = True
     with open('.lunch_candidate.json', 'r') as file:
-        unch_candidate = json.load(file)
+        lunch_candidate = json.load(file)
     name = lunch_candidate['name']
     proposal = lunch_candidate['proposal']
 
