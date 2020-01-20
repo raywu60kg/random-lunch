@@ -11,10 +11,6 @@ package_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 
-global DREW 
-DREW = False
-global result
-result = {}
 DROW_TIME = os.environ.get('DROW_TIME') or 'today'
 if DROW_TIME == 'today':
     DROW_TIME = datetime.datetime.now().strftime('%Y-%m-%d') + ' 12:00:00'
@@ -23,10 +19,12 @@ else:
 
 @app.route('/time_info', methods=['GET'])
 def get_time_info():
-    if DREW is True:
+    if 'result.json' in os.listdir('src'):
+        with open('src/result.json') as file:
+            result = json.load(file)
         return 'Already drew {}\n'.format(result)
     
-    return 'Gonna drow the meal at {}\nCurrent time: {}'.format(
+    return 'Gonna drow the meal at {}\nCurrent time: {}\n'.format(
         DROW_TIME, datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
 
 
@@ -42,7 +40,9 @@ def lunch_candidate():
             return 'Some error happened: {0}\n'.format(ex)
 
     elif request.method == 'POST':
-        if DREW is True:
+        if 'result.json' in os.listdir('src'):
+            with open('src/result.json') as file:
+                result = json.load(file)
             return 'Already drew {}\n'.format(result)
 
         data = request.get_json(force=True)
@@ -69,8 +69,10 @@ def lunch_candidate():
 
 @app.route('/result', methods=['GET'])
 def get_drow_result():
-    if DREW is True:
-        return 'Result {}\n'.format(result)
+    if 'result.json' in os.listdir('src'):
+        with open('src/result.json') as file:
+            result = json.load(file)
+        return 'Already drew {}\n'.format(result)
     else:
         return 'Have not drow\n'
 
@@ -85,37 +87,49 @@ def health_check():
     return 'OK\n'
 
 def drow_lunch():
-    if DREW is True:
+    if 'result.json' in os.listdir('src'):
+        with open('src/result.json') as file:
+            result = json.load(file)
         return 'Already drew {}\n'.format(result)
-    DREW = True
-    with open('src/lunch_candidate.json', 'r') as file:
-        lunch_candidate = json.load(file)
-    name = lunch_candidate['name']
-    proposal = lunch_candidate['proposal']
 
-    index = random.choice(list(enumerate(proposal)))[0]
+    else:
+        with open('src/lunch_candidate.json', 'r') as file:
+            lunch_candidate = json.load(file)
+        name = lunch_candidate['name']
+        proposal = lunch_candidate['proposal']
 
-    result = {
-        'name': name[index],
-        'proposal': proposal[index]
-    }
-    return 'Drew result: {}\n'.format(result)
+        index = random.choice(list(enumerate(proposal)))[0]
+
+        result = {
+            'name': name[index],
+            'proposal': proposal[index]
+        }
+        with open('src/result.json', 'w') as file:
+            json.dump(result, file)
+        return 'Drew result: {}\n'.format(result)
 
 @app.route('/drow', methods=['POST'])
 def force_drow():
-    DREW = True
-    with open('src/lunch_candidate.json', 'r') as file:
-        lunch_candidate = json.load(file)
-    name = lunch_candidate['name']
-    proposal = lunch_candidate['proposal']
+    if 'result.json' in os.listdir('src'):
+        with open('src/result.json') as file:
+            result = json.load(file)
+        return 'Already drew {}\n'.format(result)
+        
+    else:
+        with open('src/lunch_candidate.json', 'r') as file:
+            lunch_candidate = json.load(file)
+        name = lunch_candidate['name']
+        proposal = lunch_candidate['proposal']
 
-    index = random.choice(list(enumerate(proposal)))[0]
+        index = random.choice(list(enumerate(proposal)))[0]
 
-    result = {
-        'name': name[index],
-        'proposal': proposal[index]
-    }
-    return 'Drew result: {}\n'.format(result)
+        result = {
+            'name': name[index],
+            'proposal': proposal[index]
+        }
+        with open('src/result.json', 'w') as file:
+            json.dump(result, file)
+        return 'Drew result: {}\n'.format(result)
      
 
 if __name__ == '__main__':
