@@ -17,7 +17,7 @@ global result
 result = {}
 DROW_TIME = os.environ.get('DROW_TIME') or 'today'
 if DROW_TIME == 'today':
-    DROW_TIME = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    DROW_TIME = datetime.datetime.now().strftime('%Y-%m-%d') + ' 12:00:00'
 else:
     DROW_TIME = DROW_TIME
 
@@ -26,23 +26,23 @@ def get_time_info():
     if DREW is True:
         return 'Already drew {}'.format(result)
     
-    return 'Gonna drow the meal at {}'.format(DROW_TIME)
+    return 'Gonna drow the meal at {}\n'.format(DROW_TIME)
 
 
 @app.route('/lunch_candidate', methods=['GET', 'POST'])
 def lunch_candidate():
     if request.method == 'GET':
         try:
-            with open('.lunch_candidate.json', 'r') as file:
+            with open('src/lunch_candidate.json', 'r') as file:
                 lunch_candidate = json.load(file)
             return jsonify(lunch_candidate)
         except Exception as ex:
             logging.error(ex)
-            return 'Some error happened: {0}'.format(ex)
+            return 'Some error happened: {0}\n'.format(ex)
 
     elif request.method == 'POST':
         if DREW is True:
-            return 'Already drew {}'.format(result)
+            return 'Already drew {}\n'.format(result)
 
         data = request.get_json(force=True)
         logging.info('@@@ {}'.format(data))
@@ -52,13 +52,16 @@ def lunch_candidate():
         proposal = data['proposal']
 
         try:
-            with open('.lunch_candidate.json', 'r') as file:
+            with open('src/lunch_candidate.json', 'r') as file:
                 lunch_candidate = json.load(file)
             lunch_candidate['name'].append(name)
             lunch_candidate['proposal'].append(proposal)
 
-            with open('.lunch_candidate.json', 'w') as file:
+            with open('src/lunch_candidate.json', 'w') as file:
                 json.dump(lunch_candidate, file)
+            
+            return 'Added candidate :{}\n'.format(data)
+
         except Exception as ex:
             logging.error(request.args)
             return 'Post failed: {0}'.format(ex)
@@ -82,7 +85,7 @@ def health_check():
 
 def drow_lunch():
     DREW = True
-    with open('.lunch_candidate.json', 'r') as file:
+    with open('src/lunch_candidate.json', 'r') as file:
         lunch_candidate = json.load(file)
     name = lunch_candidate['name']
     proposal = lunch_candidate['proposal']
@@ -93,7 +96,7 @@ def drow_lunch():
         'name': name[index],
         'proposal': proposal[index]
     }
-    return 'Drew result: {}'.format(result)
+    return 'Drew result: {}\n'.format(result)
      
 
 if __name__ == '__main__':
