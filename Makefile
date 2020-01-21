@@ -20,7 +20,7 @@ add-candidate ::
 	curl -X POST -H "Content-Type: application/json" -d '${data}' localhost:5000/lunch_candidate
 
 check-candidate ::
-	curl localhost:5000/check-candidate
+	curl localhost:5000/lunch_candidate
 
 get-result ::
 	curl localhost:5000/result
