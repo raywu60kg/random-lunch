@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "3435ad1505bd163bbe869cdfe5264138494d6c89d9f367d0b0b896fa3fc7b202"
+            "sha256": "7c4e563fe4571d81e932dd0603f5f7a49a2dfa9a34de2758ef49b46fb374128d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,6 +38,13 @@
             ],
             "index": "pypi",
             "version": "==1.1.1"
+        },
+        "flask-apscheduler": {
+            "hashes": [
+                "sha256:7911d66e449f412d92a1a6c524217f44f4c40a5c92148c60d5189c6c402f87d0"
+            ],
+            "index": "pypi",
+            "version": "==1.11.0"
         },
         "flask-limiter": {
             "hashes": [
@@ -108,6 +115,13 @@
                 "sha256:e249096428b3ae81b08327a63a485ad0878de3fb939049038579ac0ef61e17e7"
             ],
             "version": "==1.1.1"
+        },
+        "python-dateutil": {
+            "hashes": [
+                "sha256:73ebfe9dbf22e832286dafa60473e4cd239f8592f699aa5adaf10050e6e1823c",
+                "sha256:75bb3f31ea686f1197762692a9ee6a7550b59fc6ca3a1f4b5d7e32fb98e2da2a"
+            ],
+            "version": "==2.8.1"
         },
         "pytz": {
             "hashes": [

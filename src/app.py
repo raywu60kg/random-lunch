@@ -2,13 +2,17 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from flask import Flask, jsonify, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_apscheduler import APScheduler
 import json
 import logging
 import os
 import random
 import datetime
 
-sched = BlockingScheduler()
+class Config(object):
+    SCHEDULER_API_ENABLED = True
+
+scheduler = APScheduler()
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
@@ -95,6 +99,7 @@ def health_check():
     logging.info('health check')
     return 'OK\n'
 
+@scheduler.task('date', id='draw_scheduler', run_date=DRAW_TIME)
 def draw_lunch():
     if 'result.json' in os.listdir('src'):
         with open('src/result.json', 'r') as file:
@@ -139,11 +144,11 @@ def force_draw():
         with open('src/result.json', 'w') as file:
             json.dump(result, file)
         return 'Drew result: {}\n'.format(result)
-     
+
 
 if __name__ == '__main__':
+    app.config.from_object(Config())
+    scheduler.init_app(app)
+    scheduler.start()
 
     app.run(host='127.0.0.1', debug=True)
-    sched.add_job(draw_lunch, 'date', run_date=DRAW_TIME)
-    while True:
-        sched.start()

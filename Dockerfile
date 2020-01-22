@@ -10,4 +10,4 @@ RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --deploy --ignore-pipfile
 
-ENTRYPOINT ["make", "activate"]
+ENTRYPOINT make activate
