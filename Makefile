@@ -1,17 +1,17 @@
 TAG=random-lunch:dev
-# DROW_TIME="1992-04-18 12:00:00"
+# DRAW_TIME="1992-04-18 12:00:00"
 DRAW_TIME=today
 port=5000
 TZ=Asia/Taipei
 
 activate ::
-	gunicorn -w 4 --log-config config/logging.conf -c config/gunicorn_config.py src.app:app
+	gunicorn -w 4 --log-config config/logging.conf -c config/gunicorn_config.py src.app:app --preload
 
 build-dev ::
 	docker build -t=${TAG} ./
 
 run-dev ::
-	docker run --rm -it -e DROW_TIME=${DROW_TIME} -e TZ=${TZ} -p ${port}:5000 random-lunch:dev
+	docker run --rm -it -e DRAW_TIME=${DRAW_TIME} -e TZ=${TZ} -p ${port}:5000 random-lunch:dev
 
 get-time-info ::
 	curl localhost:5000/time_info
