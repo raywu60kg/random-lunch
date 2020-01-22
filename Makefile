@@ -32,7 +32,7 @@ force-draw ::
 	curl -X POST localhost:5000/draw
 
 run :: 
-	docker run --rm -it -e DROW_TIME=${DRAW_TIME} -p ${port}:5000 -e TZ=${TZ} raywu60kg/random-lunch:latest 
+	docker run --rm -it -e DRAW_TIME=${DRAW_TIME} -p ${port}:5000 -e TZ=${TZ} raywu60kg/random-lunch:latest 
 
 	
 
