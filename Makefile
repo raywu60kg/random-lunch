@@ -11,7 +11,7 @@ build-dev ::
 	docker build -t=${TAG} ./
 
 run-dev ::
-	docker run --rm -it -e DROW_TIME=${DROW_TIME} -e TZ=${TZ} -p ${port}:5000 random-lunch:dev
+	docker run --rm -it -e DRAW_TIME=${DRAW_TIME} -e TZ=${TZ} -p ${port}:5000 random-lunch:dev
 
 get-time-info ::
 	curl localhost:5000/time_info
