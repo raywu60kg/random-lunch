@@ -1,5 +1,7 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
 from flask import Flask, jsonify, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import json
 import logging
 import os
@@ -10,6 +12,12 @@ sched = BlockingScheduler()
 package_dir = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["5 per minute", "1 per second"],
+)
+
 
 DRAW_TIME = os.environ.get('DRAW_TIME') or 'today'
 if DRAW_TIME == 'today':
@@ -29,6 +37,7 @@ def get_time_info():
 
 
 @app.route('/lunch_candidate', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def lunch_candidate():
     if request.method == 'GET':
         try:

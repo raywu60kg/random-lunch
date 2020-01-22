@@ -9,6 +9,7 @@ verify_ssl = true
 flask = "*"
 gunicorn = "*"
 apscheduler = "*"
+flask-limiter = "*"
 
 [requires]
 python_version = "3.6"
